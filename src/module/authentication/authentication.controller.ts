@@ -35,7 +35,7 @@ export class AuthenticationController {
   async logIn(@Req() request: RequestWithUser, @Res() response: Response) {
     const { user } = request;
     const { accessToken, refreshToken } =
-      await this.authenticationService.getTokens(user.id);
+      await this.authenticationService.getTokensWithUser(user.id);
     const cookie = `Authentication=${refreshToken}; HttpOnly; Path=/; Max-Age=${this.configService.get('JWT_EXPIRATION_TIME')}`;
     response.setHeader('Set-Cookie', cookie);
     user.password = undefined;
@@ -49,12 +49,11 @@ export class AuthenticationController {
     @Req() request: RequestWithUser,
     @Res() response: Response,
   ) {
-    const { user } = request;
-    const { accessToken, refreshToken } =
-      await this.authenticationService.getTokens(user.id);
+    const { accessToken, refreshToken, user } =
+      await this.authenticationService.getTokensWithUser(request.user.id);
     const cookie = `Authentication=${refreshToken}; HttpOnly; Path=/; Max-Age=${this.configService.get('JWT_EXPIRATION_TIME')}`;
     response.setHeader('Set-Cookie', cookie);
-    return response.send({ accessToken });
+    return response.send({ ...user, accessToken });
   }
 
   @UseGuards(AccessTokenGuard)

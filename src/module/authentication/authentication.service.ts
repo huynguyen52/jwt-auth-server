@@ -67,8 +67,10 @@ export class AuthenticationService {
     }
   }
 
-  public async getTokens(userId: number) {
+  public async getTokensWithUser(userId: number) {
     const payload: TokenPayload = { userId };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...user } = await this.usersService.getById(userId);
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(payload, {
         secret: this.configService.get('JWT_ACCESS_SECRET'),
@@ -80,6 +82,7 @@ export class AuthenticationService {
       }),
     ]);
     return {
+      user,
       accessToken,
       refreshToken,
     };
