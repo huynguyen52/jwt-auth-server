@@ -13,4 +13,7 @@ export class User {
 
   @Column()
   public password: string;
+
+  @Column({ nullable: true })
+  public refreshToken: string;
 }
