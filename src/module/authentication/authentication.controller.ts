@@ -17,7 +17,7 @@ import RefreshTokenGuard from './guards/refresh-token.guard';
 import { ConfigService } from '@nestjs/config';
 import AccessTokenGuard from './guards/access-token.guard';
 
-@Controller('authentication')
+@Controller('api/authentication')
 export class AuthenticationController {
   constructor(
     private readonly authenticationService: AuthenticationService,
